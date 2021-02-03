@@ -39,7 +39,7 @@ export class Braintree extends PureComponent {
         const { init } = this.props;
 
         init().then(
-            /** @namespace Braintree/Component/Braintree/Component/init/then */
+            /** @namespace BraintreeGraphQl/Component/Braintree/Component/init/then */
             () => this.setState({ isLoading: false })
         );
     }
