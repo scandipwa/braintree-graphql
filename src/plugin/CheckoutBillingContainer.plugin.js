@@ -5,8 +5,8 @@
  * See LICENSE for license details.
  *
  * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
+ * @package scandipwa/braintree-graphql
+ * @link https://github.com/scandipwa/braintree-graphql
  */
 
 import { BRAINTREE } from '../component/Braintree/Braintree.config';
@@ -15,10 +15,6 @@ export class CheckoutBillingContainerPlugin {
     onPaymentSavedInVaultChange() {
         this.setState(({ isSavePayment }) => ({ isSavePayment: !isSavePayment }));
     }
-
-    addState = (originalMember) => ({
-        ...originalMember
-    });
 
     aroundContainerFunctions = (originalMember, instance) => ({
         ...originalMember,
