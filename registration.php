@@ -7,7 +7,7 @@
  *
  * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
  * @package scandipwa/braintree-graphql
- * @link https://github.com/scandipwa/quote-graphql
+ * @link https://github.com/scandipwa/braintree-graphql
  */
 declare(strict_types=1);
 
