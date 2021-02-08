@@ -12,70 +12,64 @@
 import { BRAINTREE, BRAINTREE_CONTAINER_ID } from '../component/Braintree/Braintree.config';
 import BraintreeDropIn from '../util/Braintree';
 
-export class CheckoutPaymentsContainerPlugin {
-    braintree = new BraintreeDropIn(BRAINTREE_CONTAINER_ID);
+export const braintree = new BraintreeDropIn(BRAINTREE_CONTAINER_ID);
 
-    aroundMapStateToProps = (args, callback) => {
-        const {
-            0: {
-                ConfigReducer: {
-                    braintree_cc_vault: braintreeVaultActive
-                }
+/** @namespace BraintreeGraphql/Plugin/CheckoutPaymentsContainer/mapStateToProps */
+export const mapStateToProps = (args, callback) => {
+    const [
+        {
+            ConfigReducer: {
+                braintree_cc_vault: braintreeVaultActive
             }
-        } = args;
-
-        return {
-            ...callback(...args),
-            braintreeVaultActive
         }
-    }
+    ] = args;
 
-    aroundContainerFunctions = (originalMember) => ({
-        ...originalMember,
-        initBraintree: this.initBraintree.bind(this)
-    });
+    return {
+        ...callback(...args),
+        braintreeVaultActive
+    };
+};
 
-    aroundDataMap = (originalMember, instance) => ({
-        ...originalMember,
-        [BRAINTREE]: this.getBraintreeData.bind(instance, this)
-    });
-
-    getBraintreeData(instance) {
-        const {
-            totals: {
-                grand_total = 0
-            },
-            email,
-            address
-        } = this.props;
-
-        return {
-            asyncData: instance.braintree.requestPaymentNonce(grand_total, email, address)
-        };
-    }
-
-    initBraintree() {
-        return this.braintree.create();
-    }
+/** @namespace BraintreeGraphql/Plugin/CheckoutPaymentsContainer/initBraintree */
+export function initBraintree() {
+    return braintree.create();
 }
 
-const {
-    aroundContainerFunctions,
-    aroundDataMap,
-    aroundMapStateToProps
-} = new CheckoutPaymentsContainerPlugin();
+/** @namespace BraintreeGraphql/Plugin/CheckoutPaymentsContainer/getBraintreeData */
+export function getBraintreeData() {
+    const {
+        totals: {
+            grand_total = 0
+        },
+        email,
+        address
+    } = this.props;
 
-export const config = {
+    return {
+        asyncData: braintree.requestPaymentNonce(grand_total, email, address)
+    };
+}
+
+/** @namespace BraintreeGraphql/Plugin/CheckoutPaymentsContainer/containerFunctions */
+export const containerFunctions = (originalMember) => ({
+    ...originalMember,
+    initBraintree
+});
+
+/** @namespace BraintreeGraphql/Plugin/CheckoutPaymentsContainer/dataMap */
+export const dataMap = (originalMember, instance) => ({
+    ...originalMember,
+    [BRAINTREE]: getBraintreeData.bind(instance)
+});
+
+export default {
     'Component/CheckoutPayments/Container': {
         'member-property': {
-            containerFunctions: aroundContainerFunctions,
-            dataMap: aroundDataMap
+            containerFunctions,
+            dataMap
         }
     },
     'Component/CheckoutPayments/Container/mapStateToProps': {
-        function: aroundMapStateToProps
+        function: mapStateToProps
     }
 };
-
-export default config;
-

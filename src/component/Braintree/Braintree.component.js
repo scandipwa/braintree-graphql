@@ -25,12 +25,13 @@ export class Braintree extends PureComponent {
     static propTypes = {
         init: PropTypes.func.isRequired,
         onPaymentSavedInVaultChange: PropTypes.func.isRequired,
-        isSavePayment: PropTypes.bool.isRequired,
+        isSavePayment: PropTypes.bool,
         isVaultActive: PropTypes.bool
     };
 
     state = {
         isLoading: true,
+        isSavePayment: false,
         isVaultActive: false
     };
 

@@ -9,7 +9,8 @@
  * @link https://github.com/scandipwa/braintree-graphql
  */
 
-const addBaseFields = (args, callback) => [
+/** @namespace BraintreeGraphql/Plugin/ConfigQuery/getStoreConfigFields */
+const _getStoreConfigFields = (args, callback) => [
     ...callback(...args),
     'braintree_cc_vault'
 ];
@@ -17,7 +18,7 @@ const addBaseFields = (args, callback) => [
 export default {
     'Query/Config': {
         'member-function': {
-            _getStoreConfigFields: addBaseFields
+            _getStoreConfigFields
         }
     }
 };

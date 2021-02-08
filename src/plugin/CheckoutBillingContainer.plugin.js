@@ -11,57 +11,52 @@
 
 import { BRAINTREE } from '../component/Braintree/Braintree.config';
 
-export class CheckoutBillingContainerPlugin {
-    onPaymentSavedInVaultChange() {
-        this.setState(({ isSavePayment }) => ({ isSavePayment: !isSavePayment }));
-    }
-
-    aroundContainerFunctions = (originalMember, instance) => ({
-        ...originalMember,
-        onPaymentSavedInVaultChange: this.onPaymentSavedInVaultChange.bind(instance)
-    });
-
-    aroundGetPaymentData(args, callback, instance) {
-        const { paymentMethod: code, isSavePayment } = instance.state;
-
-        if (code === BRAINTREE) {
-            const [{ 0: { nonce } }] = args;
-
-            return {
-                code,
-                additional_data: {
-                    payment_method_nonce: nonce,
-                    is_active_payment_token_enabler: isSavePayment
-                }
-            };
-        }
-
-        return callback(...args);
-    }
-
-    // Init state
-    aroundComponentDidMouth = (args, callback, instance) => {
-        callback.apply(instance, args);
-        instance.setState({ isSavePayment: false });
-    };
+/** @namespace BraintreeGraphql/Plugin/CheckoutBillingContainer/onPaymentSavedInVaultChange */
+export function onPaymentSavedInVaultChange() {
+    this.setState(({ isSavePayment }) => ({ isSavePayment: !isSavePayment }));
 }
 
-const {
-    aroundContainerFunctions,
-    aroundGetPaymentData,
-    aroundComponentDidMouth
-} = new CheckoutBillingContainerPlugin();
+/** @namespace BraintreeGraphql/Plugin/CheckoutBillingContainer/containerFunctions */
+export const containerFunctions = (originalMember, instance) => ({
+    ...originalMember,
+    onPaymentSavedInVaultChange: onPaymentSavedInVaultChange.bind(instance)
+});
 
-export const config = {
+/** @namespace BraintreeGraphql/Plugin/CheckoutBillingContainer/getPaymentData */
+export const _getPaymentData = (args, callback, instance) => {
+    const { paymentMethod: code, isSavePayment } = instance.state;
+
+    if (code === BRAINTREE) {
+        const [[{ nonce }]] = args;
+
+        return {
+            code,
+            additional_data: {
+                payment_method_nonce: nonce,
+                is_active_payment_token_enabler: isSavePayment
+            }
+        };
+    }
+
+    return callback(...args);
+};
+
+/** @namespace BraintreeGraphql/Plugin/CheckoutBillingContainer/componentDidMount */
+export const componentDidMount = (args, callback, instance) => {
+    callback.apply(instance, args);
+
+    // Init state
+    instance.setState({ isSavePayment: false });
+};
+
+export default {
     'Component/CheckoutBilling/Container': {
         'member-property': {
-            containerFunctions: aroundContainerFunctions
+            containerFunctions
         },
         'member-function': {
-            _getPaymentData: aroundGetPaymentData,
-            componentDidMount: aroundComponentDidMouth
+            _getPaymentData,
+            componentDidMount
         }
     }
 };
-
-export default config;

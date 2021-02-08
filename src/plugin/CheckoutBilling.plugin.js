@@ -9,52 +9,31 @@
  * @link https://github.com/scandipwa/braintree-graphql
  */
 
-import CheckoutPayments from 'Component/CheckoutPayments';
+import { cloneElement } from 'react';
 
-export class CheckoutBillingPlugin {
-    aroundRenderPayments(args, callback, instance) {
-        const {
-            isSavePayment,
-            paymentMethods,
-            onPaymentMethodSelect,
-            onPaymentSavedInVaultChange,
-            onStoredPaymentMethodSelect,
-            setLoading,
-            setDetailsStep,
-            shippingAddress
-        } = instance.props;
+/** @namespace BraintreeGraphql/Plugin/CheckoutBilling/aroundRenderPayments */
+export const renderPayments = (args, callback, instance) => {
+    const {
+        isSavePayment,
+        onPaymentSavedInVaultChange
+    } = instance.props;
 
-        if (!paymentMethods.length) {
-            return null;
-        }
+    const originalElement = callback.apply(instance, args);
+    const additionalProps = {
+        isSavePayment,
+        onPaymentSavedInVaultChange
+    };
 
-        return (
-            <CheckoutPayments
-              isSavePayment={ isSavePayment }
-              setLoading={ setLoading }
-              setDetailsStep={ setDetailsStep }
-              paymentMethods={ paymentMethods }
-              onPaymentMethodSelect={ onPaymentMethodSelect }
-              onPaymentSavedInVaultChange={ onPaymentSavedInVaultChange }
-              onStoredPaymentMethodSelect={ onStoredPaymentMethodSelect }
-              setOrderButtonVisibility={ instance.setOrderButtonVisibility }
-              billingAddress={ shippingAddress }
-              setOrderButtonEnableStatus={ instance.setOrderButtonEnableStatus }
-            />
-        );
-    }
-}
+    return cloneElement(
+        originalElement,
+        additionalProps
+    );
+};
 
-const {
-    aroundRenderPayments
-} = new CheckoutBillingPlugin();
-
-export const config = {
+export default {
     'Component/CheckoutBilling/Component': {
         'member-function': {
-            renderPayments: aroundRenderPayments
+            renderPayments
         }
     }
 };
-
-export default config;

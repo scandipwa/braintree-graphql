@@ -14,53 +14,45 @@ import PropTypes from 'prop-types';
 import Braintree from '../component/Braintree';
 import { BRAINTREE } from '../component/Braintree/Braintree.config';
 
-export class CheckoutPaymentsPlugin {
-    renderBrainTreePayment() {
-        const {
-            initBraintree,
-            onPaymentSavedInVaultChange,
-            isSavePayment,
-            braintreeVaultActive
-        } = this.props;
+/** @namespace BraintreeGraphql/Plugin/CheckoutPayments/renderBraintreePayment */
+export function renderBraintreePayment() {
+    const {
+        initBraintree,
+        onPaymentSavedInVaultChange,
+        isSavePayment,
+        braintreeVaultActive
+    } = this.props;
 
-        return (
-            <Braintree
-              init={ initBraintree }
-              onPaymentSavedInVaultChange={ onPaymentSavedInVaultChange }
-              isSavePayment={ isSavePayment }
-              isVaultActive={ braintreeVaultActive }
-            />
-        );
-    }
-
-    addBrainTreePayment = (originalMember, instance) => ({
-        ...originalMember,
-        [BRAINTREE]: this.renderBrainTreePayment.bind(instance, this)
-    });
-
-    aroundPropTypes = (args, callback) => {
-        return {
-            ...callback,
-            braintreeVaultActive: PropTypes.bool.isRequired,
-            onPaymentSavedInVaultChange: PropTypes.func.isRequired
-        };
-    };
+    return (
+        <Braintree
+          init={ initBraintree }
+          onPaymentSavedInVaultChange={ onPaymentSavedInVaultChange }
+          isSavePayment={ isSavePayment }
+          isVaultActive={ braintreeVaultActive }
+        />
+    );
 }
 
-const {
-    addBrainTreePayment,
-    aroundPropTypes
-} = new CheckoutPaymentsPlugin();
+/** @namespace BraintreeGraphql/Plugin/CheckoutPayments/propTypes */
+export const propTypes = (originalMember) => ({
+    ...originalMember,
+    braintreeVaultActive: PropTypes.bool.isRequired,
+    onPaymentSavedInVaultChange: PropTypes.func.isRequired
+});
 
-export const config = {
+/** @namespace BraintreeGraphql/Plugin/CheckoutPayments/paymentRenderMap */
+export const paymentRenderMap = (originalMember, instance) => ({
+    ...originalMember,
+    [BRAINTREE]: renderBraintreePayment.bind(instance)
+});
+
+export default {
     'Component/CheckoutPayments/Component': {
         'member-property': {
-            paymentRenderMap: addBrainTreePayment
+            paymentRenderMap
         },
-        'member-function': {
-            propTypes: aroundPropTypes
+        'static-member': {
+            propTypes
         }
     }
 };
-
-export default config;

@@ -12,7 +12,7 @@
 import { Field } from 'Util/Query';
 import { fetchMutation, fetchQuery } from 'Util/Request';
 
-/** @namespace Braintree/Util/Braintree */
+/** @namespace BraintreeGraphql/Util/Braintree */
 export class Braintree {
     isLoading = false;
 
@@ -33,7 +33,7 @@ export class Braintree {
             container: `#${ this.containerId }`,
             threeDSecure: this.isThreeDSecure
         });
-
+        console.log(this.braintreeDropIn);
         return true;
     }
 
