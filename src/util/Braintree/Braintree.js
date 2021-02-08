@@ -33,7 +33,7 @@ export class Braintree {
             container: `#${ this.containerId }`,
             threeDSecure: this.isThreeDSecure
         });
-        console.log(this.braintreeDropIn);
+
         return true;
     }
 
