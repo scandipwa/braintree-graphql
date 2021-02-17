@@ -10,5 +10,8 @@
     },
     "eslintConfig": {
         "extends": "@scandipwa"
-    }
+    },
+    "files": [
+        "src"
+    ]
 }
