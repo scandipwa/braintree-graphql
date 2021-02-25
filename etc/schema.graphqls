@@ -1,0 +1,15 @@
+# ScandiPWA - Progressive Web App for Magento
+#
+# Copyright © Scandiweb, Inc. All rights reserved.
+# See LICENSE for license details.
+#
+# @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+# @package scandipwa/braintree-graphql
+# @link https://github.com/scandipwa/braintree-graphql
+#
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+extend type StoreConfig @doc(description: "The type contains information about a store config") {
+    braintree_cc_vault: Boolean @doc(description: "Allows to save card in braintree vault")
+}
